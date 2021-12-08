@@ -43,7 +43,7 @@ long ival = 0; // initial value of registers
 // Registers - definitions in struct Assembler
 long AC = ival, MBR = ival, InREG = ival, OutREG = ival;
 string MAR = "0", PC = "0", IR = "0";
-bool active = true;
+bool active = true, debug = true;
 
 struct Assembler 
 {
@@ -63,12 +63,6 @@ struct Assembler
 
 	Assembler()
 	{
-		//cout << "constructed" << endl;
-		/*
-		AC = MBR = InREG = OutREG = 11;
-		MAR = "0";
-		PC = "0";
-		IR = "0";*/
 	}
 
 	void init()
@@ -80,16 +74,17 @@ struct Assembler
 	{
 		MAR = x;
 		MBR = bin_to_long(get_contents(x));
-		cout << "Load: " << MBR << endl;
+		if (debug)
+			cout << "Load: " << MBR << endl;
 		AC = MBR;
 	}
 
 	void store(string x) // Store the contents of AC at address X
 	{
-		cout << "Store " << AC << " at " << x << endl;
+		if (debug)
+			cout << "Store " << AC << " at " << x << endl;
 		MAR = x;
 		MBR = AC;
-		//cout << "MBR: " << MBR << endl;
 		set_contents(x, MBR);
 	}
 
@@ -98,7 +93,8 @@ struct Assembler
 		
 		MAR = x;
 		MBR = bin_to_long(get_contents(x));
-		cout << "Add: " << MBR << endl;
+		if (debug)
+			cout << "Add: " << MBR << endl;
 		AC += MBR;
 	}
 
@@ -107,7 +103,8 @@ struct Assembler
 		
 		MAR = x;
 		MBR = bin_to_long(get_contents(x));
-		cout << "Subt: " << MBR << endl;
+		if (debug)
+			cout << "Subt: " << MBR << endl;
 		AC -= MBR;
 	}
 
@@ -120,21 +117,25 @@ struct Assembler
 
 	void output() // Output the value in AC to the display
 	{
-		cout << "Output: ";
+		if (debug)
+			cout << "Output: ";
 		OutREG = AC;
 		cout << OutREG << endl;
 	}
 
 	void halt() // Terminate the program
 	{
-		cout << "Halt" << endl;
+		if (debug)
+			cout << "Halt" << endl;
 		active = false;
 	}
 
 	void skipcond(string x) // Skip the next instruction on condition
 	{
-		cout << "Skipcond: " << x[0] << x[1] << endl;
-		if (x[0] == '0' and x[1] == '0') // 0
+		if (debug)
+			cout << "Skipcond: " << x[0] << x[1] << endl;
+
+		if (x[0] == '0' and x[1] == '0') // 000
 		{
 			if (AC < 0) PC = bin_add(PC, 1);
 		}
@@ -150,7 +151,8 @@ struct Assembler
 
 	void jump(string x) // Load the value of X into PC
 	{
-		cout << "Jump to " << x << endl;
+		if (debug)
+			cout << "Jump to " << x << endl;
 		PC = x;
 	}
 };
@@ -162,7 +164,6 @@ int main()
 	ifstream assemFile;
 	fstream binFile;
 	string curLine, curSub, addr, inst;
-	
 	Assembler assem;
 	
 	assemFile.open("assembly.txt");
@@ -170,7 +171,7 @@ int main()
 
 	if(assemFile.is_open())
 	{
-		while (getline(assemFile, curLine))
+		while (getline(assemFile, curLine)) // Reads each line of assembly file, writes converted code to binary file
 		{
 			stringstream ss(curLine);
 			while(getline(ss, curSub, ' '))
@@ -186,11 +187,9 @@ int main()
 
 	binFile.open("binary.txt");
 	
-	// Use a map to map each address to each instruction
-	// The map will be used to execute the instructions
 	if (binFile.is_open())
 	{
-		while (getline(binFile, curLine))
+		while (getline(binFile, curLine)) // Separates address from instruction - inserts into map prog
 		{
 			addr = curLine.substr(0, 12);
 			inst = curLine.substr(12, curLine.length());
@@ -201,58 +200,32 @@ int main()
 
 	binFile.close();
 
-	// Iterate through program
-	map<string, string>::iterator it = prog.begin();
-	PC = bin_subt(it->first, 1); // initialize PC
-	//PC = it->first;
+	
+	map<string, string>::iterator it = prog.begin(); // Program iterator
+	PC = bin_subt(it->first, 1); // Initialize PC register
 
 	while (active) // Program loop
 	{
-		//cout << "PC, it: " << PC << ", " << it->first << endl;
-		// if pc = it->first - 1 // normal flow
 		if (PC == bin_subt(it->first, 1)) // Normal flow
-		{
-			//cout << "hit" << endl;
 			PC = it->first;
-		}
 		else if (PC == it->first) // Skipcond
 		{
 			it++;
 			PC = it->first;
-			//continue;
 		}
 		else // Jump
-		{
 			it = prog.find(PC);
-		}
 
-		// else prog.find(PC)
-		
-		//bin_subt(it->first, 1);
-		//PC = it->first;
-		//cout << "Pc: " << PC << endl;
-		//cout << "it->first: " << it->first << endl;
 		parse_bin(it->first, it->second, assem); // Parse and execute the line
 		it++;
 
-		//if (it == prog.end()) break;
+		if (it == prog.end()) break;
 	}
 
-	/*
-	for (it = prog.begin(); it != prog.end(); it++)
-	{
-		//if pc = it->first - 1 // normal flow
-		// if pc = it->first // skipcond
-		// else prog.find(PC)
-		PC = it->first;
-		cout << "Pc: " << PC << endl;
-		parse_bin(it->first, it->second, assem);
-	}
-	*/
 	return 0;
 }
 
-// Utility functions
+// Utility functions //
 
 string hex_to_bin(string hexs)
 {
@@ -268,7 +241,6 @@ string hex_to_bin(string hexs)
 
 string hex_to_bin_c(char hexc)
 {
-	//cout << "|hexc = " << hexc << "|";
 	switch(hexc)
 	{
 		case '0': return "0000";
@@ -300,9 +272,9 @@ string parse_sub(string sub)
 	else if (sub == "Store") return "0010";
 	else if (sub == "Add") return "0011";
 	else if (sub == "Subt") return "0100";
-	else if (sub == "Input") return "0101 000000000000";
+	else if (sub == "Input") return "0101 000000000000"; // Ends in 0s for lack of target address
 	else if (sub == "Output") return "0110 000000000000";
-	else if (sub == "Halt") return "0111 000000000000"; // Halt inst. ends in 0s
+	else if (sub == "Halt") return "0111 000000000000";
 	else if (sub == "Skipcond") return "1000";
 	else if (sub == "Jump") return "1001";
 	return hex_to_bin(sub); // Implies it's a number, whether it's hex or dec
@@ -310,9 +282,8 @@ string parse_sub(string sub)
 
 void parse_bin(string addr, string inst, Assembler assem)
 {
-	// Get target address (if applicable)
 	string opcode = inst.substr(0, 4);
-	string opand = inst.substr(4, inst.length());
+	string opand = inst.substr(4, inst.length()); // Get target address (operand)
 	
 	if (opcode == "0001") assem.load(opand);
 	else if(opcode == "0010") assem.store(opand);
@@ -332,19 +303,16 @@ string get_contents(string addr)
 
 void set_contents(string addr, long bin)
 {
-	//cout << "Before: " << prog.find(addr)->second << endl;
 	string s = long_to_bin(bin);
-	for (int i = s.length(); i < 12; i++)
+	for (int i = s.length(); i < 12; i++) // Pads front of string with 0s
 	{
 		s.insert(0, "0");
 	}
 	prog.find(addr)->second = s; // contents of address = bin
-	//cout << "After: " << prog.find(addr)->second << endl;
 }
 
 long bin_to_long(string bin)
 {
-	//cout << "String "  << bin << " => " << stoul(bin, nullptr, 2) << endl;
 	return stol(bin, nullptr, 2);
 }
 
@@ -353,34 +321,24 @@ string long_to_bin(long bin)
 	string r;
 	while (bin != 0) { r = (bin % 2 == 0 ? "0" : "1") + r; bin /= 2; }
 	return r;
-
 }
 
 string bin_add(string bin, long x)
 {
 	string s = long_to_bin(bin_to_long(bin) + x);;
-
-	//cout << "S = " << s << endl;
-	for (int i = s.length(); i < 12; i++)
+	for (int i = s.length(); i < 12; i++) // see set_contents for loop
 	{
 		s.insert(0, "0");
 	}
-	
-	//cout << "s = " << s << endl;
 	return s;
 }
 
 string bin_subt(string bin, long x)
 {
 	string s = long_to_bin(bin_to_long(bin) - x);;
-
-	//cout << "S = " << s << endl;
-	for (int i = s.length(); i < 12; i++)
+	for (int i = s.length(); i < 12; i++) // above
 	{
 		s.insert(0, "0");
 	}
-
-	//cout << "s = " << s << endl;
-
 	return s;
 }
