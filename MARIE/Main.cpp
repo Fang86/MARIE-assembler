@@ -1,5 +1,4 @@
-/*
- * Assignment: Create a program that converts MARIE assembler 
+/* Assignment: Create a program that converts MARIE assembler 
  * code to binary then executes the binary code
  * 
  * List of MARIE instructions:
@@ -14,8 +13,6 @@
  * Halt		- Terminate the program
  * Skipcond	- Skip the next instruction on condition
  * Jump		- Load the value of X into PC
- *
- * 
  */
 
 #include <iostream>
@@ -39,11 +36,11 @@ string bin_subt(string bin, long x); // Subtracts long x from binary string
 map<string, string> prog; // memory address, instruction (contents)
 
 long ival = 0; // initial value of registers
+bool active = true, debug = true; // Program flags
 
 // Registers - definitions in struct Assembler
 long AC = ival, MBR = ival, InREG = ival, OutREG = ival;
 string MAR = "0", PC = "0", IR = "0";
-bool active = true, debug = true;
 
 struct Assembler 
 {
@@ -313,13 +310,13 @@ void set_contents(string addr, long bin)
 
 long bin_to_long(string bin)
 {
-	return stol(bin, nullptr, 2);
+	return stol(bin, nullptr, 2); // String -> long, converted to base 10 from base 2
 }
 
 string long_to_bin(long bin)
 {
 	string r;
-	while (bin != 0) { r = (bin % 2 == 0 ? "0" : "1") + r; bin /= 2; }
+	while (bin != 0) { r = (bin % 2 == 0 ? "0" : "1") + r; bin /= 2; } // Long -> string, converted to base 2 from base 10
 	return r;
 }
 
