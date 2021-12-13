@@ -1,5 +1,5 @@
-100 Load 110
-101 Add 111
+100 Load x /Test er comment
+101 Add X
 102 Output
 103 Input
 104 Subt 112
@@ -7,15 +7,16 @@
 106 Skipcond 000
 107 Add 113
 108 Output
-109 Jump 10C
+109 Jump y
 10A Input
 10B Output
-10C Store 114
+/middle comment!
+10C y, Store 114
 10D Add 114
 10E Output
 10F Halt
-110 0400
-111 0800
-112 1000
+110 x, DEC 400 / label, directive, number
+111 X, 0800 / label, number (assumed hex)
+112 HEX 1000 / directive, number
 113 157A
 114 0000

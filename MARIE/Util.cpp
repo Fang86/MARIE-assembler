@@ -7,21 +7,21 @@
 using namespace std;
 
 map<string, string> prog;			// Program map - memory address, instruction (contents)
+map<string, string> vars;			// Variable map - variable char, memory address
 bool active = true, debug = true;	// Program flags
 
 /*
-string hex_to_bin(string hexs);				// Returns a binary string from a hexadecimal string
-string hex_to_bin_c(char hexc);				// Returns a 4 bit binary
-string get_contents(string addr);			// Returns contents of memory at given address - always value, never inst.
-void set_contents(string addr, long bin);	// Sets contents of memory at given address
-long bin_to_long(string bin);				// Converts binary string to decimal long
-string long_to_bin(long bin);				// Converts long to binary string
-string bin_add(string bin, long x);			// Adds long x to binary string
-string bin_subt(string bin, long x);		// Subtracts long x from binary string
+* string hex_to_bin(string hexs);			// Returns a binary string from a hexadecimal string
+* string hex_to_bin_c(char hexc);			// Returns a 4 bit binary
+* string get_contents(string addr);			// Returns contents of memory at given address - always value, never inst.
+* void set_contents(string addr, long bin);	// Sets contents of memory at given address
+* long bin_to_long(string bin);				// Converts binary string to decimal long
+* string long_to_bin(long bin);				// Converts long to binary string
+* string bin_add(string bin, long x);		// Adds long x to binary string
+* string bin_subt(string bin, long x);		// Subtracts long x from binary string
+* string pad(string s, int len);			// Pads front of string with 0s - based on intended length
 */
-string hex_to_bin_c(char hexc);				// Returns a 4 bit binary
-string long_to_bin(long bin);				// Converts long to binary string
-string pad(string s, int len);				// Pads front of string with 0s - based on intended length
+
 
 string hex_to_bin(string hexs)
 {

@@ -1,21 +1,6 @@
-100 Load 110
-101 Add 111
+100 Load x
+101 Add 105
 102 Output
-103 Input
-104 Subt 112
-105 Output
-106 Skipcond 000
-107 Add 113
-108 Output
-109 Jump 10C
-10A Input
-10B Output
-10C Store 114
-10D Add 114
-10E Output
-10F Halt
-110 0400
-111 0800
-112 1000
-113 157A
-114 0000
+103 Halt
+104 x, DEC 0400
+105 HEX 0800

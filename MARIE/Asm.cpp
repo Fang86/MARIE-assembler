@@ -3,12 +3,12 @@
 long AC = 0, MBR = 0, InREG = 0, OutREG = 0;
 string MAR = "0", PC = "0", IR = "0";
 
-void Assembler::init()
+void Processor::init()
 {
 	MAR = PC;
 }
 
-void Assembler::load(string x) // Load the contents of address X into AC
+void Processor::load(string x) // Load the contents of address X into AC
 {
 	MAR = x;
 	MBR = bin_to_long(get_contents(x));
@@ -17,7 +17,7 @@ void Assembler::load(string x) // Load the contents of address X into AC
 	AC = MBR;
 }
 
-void Assembler::store(string x) // Store the contents of AC at address X
+void Processor::store(string x) // Store the contents of AC at address X
 {
 	if (debug)
 		cout << "Store " << AC << " at " << x << endl;
@@ -26,7 +26,7 @@ void Assembler::store(string x) // Store the contents of AC at address X
 	set_contents(x, MBR);
 }
 
-void Assembler::add(string x) // Add the contents of address X to AC and store the result in AC
+void Processor::add(string x) // Add the contents of address X to AC and store the result in AC
 {
 
 	MAR = x;
@@ -36,7 +36,7 @@ void Assembler::add(string x) // Add the contents of address X to AC and store t
 	AC += MBR;
 }
 
-void Assembler::subt(string x) // Subtract the contents of address X from AC and store the result in AC
+void Processor::subt(string x) // Subtract the contents of address X from AC and store the result in AC
 {
 
 	MAR = x;
@@ -46,14 +46,14 @@ void Assembler::subt(string x) // Subtract the contents of address X from AC and
 	AC -= MBR;
 }
 
-void Assembler::input() // Input a value from the keyboard into AC (binary only)
+void Processor::input() // Input a value from the keyboard into AC (binary only)
 {
 	cout << "Input: ";
 	cin >> InREG;
 	AC = InREG;
 }
 
-void Assembler::output() // Output the value in AC to the display
+void Processor::output() // Output the value in AC to the display
 {
 	if (debug)
 		cout << "Output: ";
@@ -61,14 +61,14 @@ void Assembler::output() // Output the value in AC to the display
 	cout << OutREG << endl;
 }
 
-void Assembler::halt() // Terminate the program
+void Processor::halt() // Terminate the program
 {
 	if (debug)
 		cout << "Halt" << endl;
 	active = false;
 }
 
-void Assembler::skipcond(string x) // Skip the next instruction on condition
+void Processor::skipcond(string x) // Skip the next instruction on condition
 {
 	if (debug)
 		cout << "Skipcond: " << x[0] << x[1] << endl;
@@ -87,7 +87,7 @@ void Assembler::skipcond(string x) // Skip the next instruction on condition
 	}
 }
 
-void Assembler::jump(string x) // Load the value of X into PC
+void Processor::jump(string x) // Load the value of X into PC
 {
 	if (debug)
 		cout << "Jump to " << x << endl;

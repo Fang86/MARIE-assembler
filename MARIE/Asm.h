@@ -15,11 +15,12 @@ extern long bin_to_long(string bin);				// Converts binary string to decimal lon
 extern string long_to_bin(long bin);				// Converts long to binary string
 extern string bin_add(string bin, long x);			// Adds long x to binary string
 extern string bin_subt(string bin, long x);			// Subtracts long x from binary string
-string pad(string s, int len);						// Pads front of string with 0s - based on intended length
+extern string pad(string s, int len);						// Pads front of string with 0s - based on intended length
 extern map<string, string> prog;					// Program map - memory address, instruction (contents)
+extern map<string, string> vars;								// Variable map - variable char, memory address
 extern bool active, debug;							// Program flags
 
-struct Assembler
+struct Processor
 {
 	/* AC: The accumulator, which holds data values. This is a general-purpose
 	 *		register, and it holds data that the CPU needs to process. Most computer
@@ -34,8 +35,6 @@ struct Assembler
 	 * InREG: The input register, which holds data from the input device.
 	 * OutREG: The output register, which holds data for the output device.
 	 */
-
-	 //Assembler();
 
 	void init();
 
