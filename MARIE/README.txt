@@ -24,7 +24,7 @@ Here is an example:
 
 Now the assembly.txt file will be converted into binary in the same 
 formatting, then saved as "binary.txt." The program reads the file and 
-executes accordingly, line by line.
+executes accordingly, line by line, starting on the first line.
 
 
 
@@ -35,7 +35,7 @@ executes accordingly, line by line.
 
 This program supports 9 basic MARIE instructions: Load, Store, Add, Subt, 
 Input, Output, Halt, Skipcond, and Jump. These instructions should be used
-as follows:
+as follows (X = target address):
 
 
 Load (target_address)	- Load the contents of address X into AC
@@ -54,7 +54,7 @@ Output			- Output the value in AC to the display
 
 Halt			- Terminate the program
 
-Skipcond y		- Skip the next instruction on condition (y). This 
+Skipcond (y)		- Skip the next instruction on condition (y). This 
 			  can be 3 different hex numbers: 000, 400, or 800.
 				000 skips if AC < 0
 				400 skips if AC == 0
