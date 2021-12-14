@@ -15,8 +15,8 @@
 10D Add 114
 10E Output
 10F Halt
-110 x, DEC 400 / label, directive, number
+110 x, DEC -400 / label, directive, number
 111 X, 0800 / label, number (assumed hex)
 112 HEX 1000 / directive, number
-113 157A
+113 -157A
 114 0000

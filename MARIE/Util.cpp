@@ -8,7 +8,7 @@ using namespace std;
 
 map<string, string> prog;			// Program map - memory address, instruction (contents)
 map<string, string> vars;			// Variable map - variable char, memory address
-bool active = true, debug = true;	// Program flags
+bool active = true, debug = false;	// Program flags
 
 /*
 * string hex_to_bin(string hexs);			// Returns a binary string from a hexadecimal string
@@ -26,11 +26,16 @@ bool active = true, debug = true;	// Program flags
 string hex_to_bin(string hexs)
 {
 	string bin;
+	int i = 0;
+	bool neg = (hexs.find("-") != string::npos);
+	if (neg) i++;
 
-	for (unsigned int i = 0; i < hexs.length(); i++)
+	for (;i < hexs.length(); i++)
 	{
 		bin += hex_to_bin_c(char(hexs[i]));
 	}
+
+	if (neg) bin.insert(0, "1");
 
 	return bin;
 }
@@ -64,18 +69,21 @@ string hex_to_bin_c(char hexc)
 
 string get_contents(string addr)
 {
+	//cout << "getting: " << prog.find(addr)->second << endl;
 	return prog.find(addr)->second;
 }
 
 void set_contents(string addr, long bin)
 {
-	string s = long_to_bin(bin);
-	s = pad(s, 12);
+	string s = long_to_bin(bin, 16);
 	prog.find(addr)->second = s; // contents of address = bin
 }
 
 long bin_to_long(string bin)
 {
+	if (bin.length() == 17 and bin[0] == '1') // adds 1 to front of string if negative
+		return -1 * stol(bin.substr(1,16), nullptr, 2); 
+
 	return stol(bin, nullptr, 2); // String -> long, converted to base 10 from base 2
 }
 
@@ -83,26 +91,38 @@ string long_to_bin(long bin)
 {
 	string r;
 	long bin_copy = bin;
-	while (bin != 0) 
+	while (bin != 0) // Long -> string, converted to base 2 from base 10
 	{
 		r = (bin % 2 == 0 ? "0" : "1") + r; 
 		bin /= 2;
-	} // Long -> string, converted to base 2 from base 10
+	} 
+	return r;
+}
+
+string long_to_bin(long bin, int len)
+{
+	string r;
+	long bin_copy = bin;
+	while (bin != 0) // Long -> string, converted to base 2 from base 10
+	{
+		r = (bin % 2 == 0 ? "0" : "1") + r;
+		bin /= 2;
+	}
+	r = pad(r, len);
+	if (bin_copy < 0)
+		r.insert(0, "1");
 	return r;
 }
 
 string bin_add(string bin, long x)
 {
 	string s = long_to_bin(bin_to_long(bin) + x);;
-
-	
 	return pad(s,12);
 }
 
 string bin_subt(string bin, long x)
 {
 	string s = long_to_bin(bin_to_long(bin) - x);;
-	
 	return pad(s,12);
 }
 

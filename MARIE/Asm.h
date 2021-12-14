@@ -13,6 +13,7 @@ extern string get_contents(string addr);			// Returns contents of memory at give
 extern void set_contents(string addr, long bin);	// Sets contents of memory at given address
 extern long bin_to_long(string bin);				// Converts binary string to decimal long
 extern string long_to_bin(long bin);				// Converts long to binary string
+extern string long_to_bin(long bin, int len);		// Converts long to binary string, pads based on len
 extern string bin_add(string bin, long x);			// Adds long x to binary string
 extern string bin_subt(string bin, long x);			// Subtracts long x from binary string
 extern string pad(string s, int len);						// Pads front of string with 0s - based on intended length

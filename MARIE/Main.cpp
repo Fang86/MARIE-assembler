@@ -109,7 +109,7 @@ int main()
 		parse_bin(it->first, it->second, proc); // Parse and execute the line
 		it++;
 
-		if (it == prog.end()) break;
+		if (it == prog.end()) break; // failsafe
 	}
 
 	return 0;
@@ -125,7 +125,7 @@ string parse_sub(string sub, string &hd)
 	else if (hd == "DEC")
 	{
 		hd = "";
-		return pad(long_to_bin(stol(sub)), 16); // decimal to binary string, padded to 16 bits
+		return long_to_bin(stol(sub), 16); // decimal to binary string, padded to 16 bits
 	}
 		
 
