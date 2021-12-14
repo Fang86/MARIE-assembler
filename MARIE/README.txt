@@ -30,8 +30,8 @@ How to use:
 
     - Hexadecimal numbers should have exactly 3 digits for addresses and 
       4 digits for non-address numbers (compare lines 101 vs 105 above). 
-      Decimal numbers do not have a requirement and supports a signed 
-      32-bit number. A signed 16-bit number is recommended to match HEX.
+      Decimal numbers do not have this requirement. Decimal number must
+      be a signed 16-bit number.
 
     - Non-address numbers are assumed to be hexademical unless the DEC 
       directive is used. Directives can only be used for non-address 
